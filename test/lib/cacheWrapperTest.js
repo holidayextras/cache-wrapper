@@ -14,8 +14,6 @@ var Catbox = require( 'catbox' );
 
 var sinon = require( 'sinon' );
 
-// ----------------------------------------------------------------------------------------------------
-// MOVE TO FIXTURES
 var policies = [ {
 	segment: 'foo',
 	expiresIn: 10000
@@ -44,8 +42,6 @@ var brokenCacheItem = {
 	key: true,
 	value: 'baz'
 };
-
-// ----------------------------------------------------------------------------------------------------
 
 var isReadyStub;
 var startStub;
