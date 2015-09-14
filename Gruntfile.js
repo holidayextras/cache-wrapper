@@ -5,7 +5,6 @@ var makeup = require( 'make-up' );
 
 module.exports = function( grunt ) {
 
-	// project configuration
 	grunt.initConfig( {
 		jshint: {
 			options: {
