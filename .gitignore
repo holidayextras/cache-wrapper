@@ -83,3 +83,5 @@ node_modules
 
 # Transformer pouch database
 transformer
+
+.eslintrc

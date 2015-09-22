@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "grunt jshint && grunt jscs && istanbul cover _mocha -- test/**/*Test.js -R spec"
+    "test": "node_modules/.bin/make-up lib test && istanbul cover _mocha -- test/**/*Test.js -R spec"
   },
   "dependencies": {
     "catbox": "4.2.0",
@@ -35,7 +35,7 @@
     "grunt-contrib-jshint": "0.10.0",
     "grunt-jscs": "0.8.1",
     "istanbul": "0.3.7",
-    "make-up": "1.0.4",
+    "make-up": "5.3.1",
     "mocha": "1.21.3",
     "sinon": "1.11.1"
   }

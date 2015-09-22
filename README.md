@@ -1,29 +1,29 @@
 # cache-wrapper
 
-[![Build Status](https://api.shippable.com/projects/54ff09505ab6cc135296f99e/badge?branchName=master)](https://app.shippable.com/projects/54ff09505ab6cc135296f99e/builds/latest)
+[![Build Status](https://api.shippable.com/projects/55f69ce19dd02e0b009e7384/badge?branchName=master)](https://app.shippable.com/projects/55f69ce19dd02e0b009e7384/builds/latest)
 
 ## About
 
-A simple wrapper for catbox cache, that uses redis in production and memory when running in local development. This also offers queueing for requests in the connection to the cache server has dropped.
+A simple wrapper for catbox cache, that uses redis in production and memory when running in local development. This also offers queueing for requests if the connection to the cache server has dropped.
 
 ## Getting Started
 
-You can start with cloneing down the repo
+You can start with cloning down the repo
 
 ```
 $ git clone git@github.com:holidayextras/cache-wrapper
 ```
 
-or to install this module to your project you will need to add this line to your dependencies in your package.json
-
-```
-cache-wrapper: 'git+ssh://git@github.com/holidayextras/cache-wrapper'
-```
-
-After you will need to install this dependency and its dependencies
+After you will need to install its dependencies
 
 ```
 $ npm install
+```
+
+or to install this module to your project
+
+```
+npm install github.com/holidayextras/cache-wrapper --save
 ```
 
 ## Implementation
