@@ -35,7 +35,7 @@ var cache = require( 'cache-wrapper' );
 
 var serverConfig = {
 	host: 'cache-production.t-bob.co.uk',
-	port: '11211',
+	port: 11211,
 	partition: 'theWorks'
 };
 
