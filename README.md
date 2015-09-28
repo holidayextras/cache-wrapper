@@ -1,6 +1,6 @@
 # cache-wrapper
 
-[![Build Status](https://api.shippable.com/projects/55f69ce19dd02e0b009e7384/badge?branchName=master)](https://app.shippable.com/projects/55f69ce19dd02e0b009e7384/builds/latest)
+[![Circle CI](https://circleci.com/gh/holidayextras/cache-wrapper/tree/master.svg?style=svg&circle-token=c8841a78d88271f74d5bda3a0c307056662d29ad)](https://circleci.com/gh/holidayextras/cache-wrapper/tree/master)
 
 ## About
 
