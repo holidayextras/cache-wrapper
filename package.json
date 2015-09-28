@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "node_modules/.bin/make-up lib test && istanbul cover _mocha -- test/**/*Test.js -R spec"
+    "test": "node_modules/deployment-helpers/nodeApps/preRelease.sh && node_modules/.bin/make-up lib test && istanbul cover _mocha -- test/**/*Test.js -R spec"
   },
   "dependencies": {
     "catbox": "4.2.0",
@@ -31,6 +31,7 @@
   "devDependencies": {
     "chai": "2.2.0",
     "chai-as-promised": "5.1.0",
+    "deployment-helpers": "git+ssh://git@github.com:holidayextras/deployment-helpers.git",
     "grunt": "0.4.4",
     "grunt-contrib-jshint": "0.10.0",
     "grunt-jscs": "0.8.1",
