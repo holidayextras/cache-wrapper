@@ -4,7 +4,7 @@
 
 ## About
 
-A simple wrapper for catbox cache, that uses redis in production and memory when running in local development. This also offers queueing for requests if the connection to the cache server has dropped.
+A simple wrapper for catbox cache, that uses redis if `serverConfig` is not empty and memory when `serverConfig` is an empty object. This also offers queueing for requests if the connection to the cache server has dropped.
 
 ## Getting Started
 
