@@ -26,7 +26,8 @@
     "catbox-memory": "1.1.1",
     "catbox-redis": "1.0.4",
     "lodash": "3.10.1",
-    "q": "1.4.1"
+    "q": "1.4.1",
+    "redis": "^2.6.0-2"
   },
   "devDependencies": {
     "chai": "2.2.0",
