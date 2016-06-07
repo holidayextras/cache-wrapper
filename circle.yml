@@ -5,16 +5,16 @@ dependencies:
   pre:
     - npm install git+ssh://git@github.com:holidayextras/deployment-helpers.git
     - node_modules/deployment-helpers/nodeApps/preRelease.sh
-    - npm install istanbul mocha -g
 test:
   pre:
     - mkdir -p $CIRCLE_TEST_REPORTS/unit
     - mkdir -p $CIRCLE_TEST_REPORTS/coverage
   override:
-    - node_modules/.bin/make-up lib integrations test
-    - istanbul cover _mocha --  --timeout 15000 --recursive test/**/*Test.js -R xunit > $CIRCLE_TEST_REPORTS/unit/results.xml
+    - npm run lint
+    - npm run ci
   post:
     - cp -r ./coverage/ $CIRCLE_ARTIFACTS/coverage
+    - echo "$GRAPHITE_API_KEY.counters.$CIRCLE_PROJECT_REPONAME.production.test.coverage `./node_modules/.bin/coverage-percentage ./coverage/lcov.info --lcov`" | nc -uw0 carbon.hostedgraphite.com 2003
 deployment:
   production:
     branch: master

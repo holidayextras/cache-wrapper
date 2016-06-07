@@ -6,9 +6,9 @@ var cacheWrapper = require( './index' );
 
 
 cacheWrapper.initialise( {
-  "host": "localhost",
-  "port": "6379",
-  "partition": "cacheWrapper" 
+  host: 'localhost',
+  port: '6379',
+  partition: 'cacheWrapper'
 }, [ {
   segment: 'foo',
   expiresIn: 10000
@@ -36,37 +36,44 @@ cacheWrapper.initialise( {
           prefix: 'kev:hodges:'
         } ).then( function() {
 
+          console.log('getting');
+
           cacheWrapper.get( {
             segment: 'foo',
             key: 'kev:hodges:1'
-          } ).then( console.log );
+          } ).then( console.log )
+          .fail( function( error) {
+            console.log('error', error );
+          });
 
           cacheWrapper.get( {
             segment: 'foo',
             key: 'kev:hodges:2'
-          } ).then( console.log );
+          } ).then( console.log )
+          .fail( function( error) {
+            console.log('error2', error );
+          });
+
 
           cacheWrapper.get( {
             segment: 'foo',
             key: 'kev:nugget:1'
-          } ).then( console.log );
+          } ).then( console.log )
+          .fail( function( error) {
+            console.log('error3', error );
+          });
 
         } );
       } );
-
     } );
-
-
-    
-   
   } ).fail( console.log );
 } ).fail( console.log );
 
 
 // cacheWrapper.initialise( {
-//   "host": "localhost",
-//   "port": "6379",
-//   "partition": "cahceWrapper" 
+//   host: 'localhost',
+//   port: '6379',
+//   partition: 'cacheWrapper'
 // }, [ {
 //   segment: 'foo',
 //   expiresIn: 10000

@@ -1,128 +1,75 @@
 'use strict';
 
-process.env.NODE_ENV = 'development';
+var sinon = require('sinon');
+var sandbox = sinon.sandbox.create();
+var expect = require('chai')
+  .use(require('dirty-chai'))
+  .use(require('chai-as-promised'))
+  .use(require('sinon-chai'))
+  .expect;
 
-var cache = require( '../../lib/cacheWrapper' );
-var chai = require( 'chai' );
-chai.use( require( 'chai-as-promised' ) );
-var expect = chai.expect;
+var rewire = require( 'rewire' );
+var cache = rewire( '../../lib/cacheWrapper' );
 
-var Catbox = require( 'catbox' );
+var Catbox = rewire( 'catbox' );
 
-var sinon = require( 'sinon' );
+describe('cacheWrapper', function() {
 
-var policies = [ {
-  segment: 'foo',
-  expiresIn: 10000
-} ];
+  afterEach(function() {
+    sandbox.restore();
+  });
 
-var serverConfig = {};
+  describe('initialise', function() {
+    
+    var result;
 
-var cacheItem = {
-  segment: 'foo',
-  key: 'bar',
-  value: 'baz'
-};
+    // beforeEach(function() {
+    //   result = cache.initialise();
+    // });
 
-var nonExistantCacheItem = {
-  segment: 'foo',
-  key: 'noExist'
-};
+    // it('rejects the promise when no serverConfig is passed', function() {
+    //   console.log( 'result', result );
+    //   return expect(result).to.be.rejectedWith( 'no serverConfig passed' );
+    // });
 
-var nonExistantCachePolicy = {
-  segment: 'noExist',
-  key: 'noExist'
-};
+    // beforeEach( function() {
 
-var brokenCacheItem = {
-  segment: 'foo',
-  key: true,
-  value: 'baz'
-};
+    //   Catbox.__set__( 'Client', function() {
+    //     console.log('++');
+    //     return {};
+    //   } );
 
-var isReadyStub;
-var startStub;
+    //   // sandbox.stub(Catbox.Client, 'prototype.', function( ) {
+    //   //   console.log('++');
+    //   //   return {};
+    //   // });
+    //   result = cache.initialise({
+    //     a: 'b'
+    //   });
+    // });
 
-describe( 'Cache', function() {
+    // it('', function() {
+    //   console.log( 'result', result );
+    //   return expect(result).to.be.rejectedWith( 'no serverConfig passed' );
+    // });
 
-  it( 'should fail to set an item in the cache before it has initialised', function() {
-    return expect( cache.set( cacheItem ) ).to.be.rejected;
-  } );
+  });
 
-  it( 'should initialise the cache', function() {
-    return expect( cache.initialise( serverConfig, policies ) ).to.be.fulfilled;
-  } );
 
-  it( 'should set an item in the cache', function() {
-    return expect( cache.set( cacheItem ) ).to.be.fulfilled;
-  } );
+   describe('_retrieve', function() {
+    var result;
 
-  it( 'should get the item from the cache', function() {
-    return expect( cache.get( cacheItem ) ).to.be.fulfilled.and.to.eventually.equal( cacheItem.value );
-  } );
+    beforeEach(function() {
+      cache.__set__( 'policies', {
+        kev: 'kev'
+      });
+      result = cache._retrieve();
+    });
 
-  it( 'should fail to get a non-existant item from the cache', function() {
-    return expect( cache.get( nonExistantCacheItem ) ).to.be.rejected;
-  } );
+    it('kev', function() {
+      console.log( 'result', result );
+      return expect(result).to.be.rejectedWith( 'no serverConfig passed' );
+    });
 
-  it( 'should fail to get a non-existant policy item from the cache', function() {
-    return expect( cache.get( nonExistantCachePolicy ) ).to.be.rejected;
-  } );
-
-  it( 'should fail to set an item in a non-existant policy', function() {
-    return expect( cache.set( nonExistantCachePolicy ) ).to.be.rejected;
-  } );
-
-  it( 'should fail to set an item that is broken', function() {
-    return expect( cache.set( brokenCacheItem ) ).to.be.rejected;
-  } );
-
-  context( 'Cache not ready, queue it', function() {
-
-    before( function() {
-      isReadyStub = sinon.stub( Catbox.Client.prototype, 'isReady', function() {
-        return false;
-      } );
-    } );
-
-    after( function() {
-      isReadyStub.restore();
-    } );
-
-    it( 'should queue and then set an item in the cache', function() {
-      return expect( cache.set( cacheItem ) ).to.be.fulfilled;
-    } );
-
-    it( 'should queue and then get an item from the cache', function() {
-      return expect( cache.get( cacheItem ) ).to.be.fulfilled.and.to.eventually.equal( cacheItem.value );
-    } );
-
-  } );
-
-  context( 'Cache start error', function() {
-
-    before( function() {
-      isReadyStub = sinon.stub( Catbox.Client.prototype, 'isReady', function() {
-        return false;
-      } );
-      startStub = sinon.stub( Catbox.Client.prototype, 'start', function( callback ) {
-        return callback( 'error' );
-      } );
-    } );
-
-    after( function() {
-      startStub.restore();
-      isReadyStub.restore();
-    } );
-
-    it( 'should fail to queue and then set an item in the cache', function() {
-      return expect( cache.set( cacheItem ) ).to.be.rejected;
-    } );
-
-    it( 'should fail to queue and then get an item from the cache', function() {
-      return expect( cache.get( cacheItem ) ).to.be.rejected;
-    } );
-
-  } );
-
-} );
+  });
+});
