@@ -8,6 +8,7 @@ var expect = require('chai')
   .use(require('sinon-chai'))
   .expect;
 
+var Q = require( 'q' );
 var rewire = require( 'rewire' );
 var cache = rewire( '../../lib/cacheWrapper' );
 
@@ -55,20 +56,20 @@ describe('cacheWrapper', function() {
 
   });
 
-
-   describe('_retrieve', function() {
+  describe('_retrieve', function() {
     var result;
-
+    var deferred;
     beforeEach(function() {
-      cache.__set__( 'policies', {
-        kev: 'kev'
-      });
-      result = cache._retrieve();
+      // cache.__set__( 'policies', {
+      //   kev: 'kev'
+      // });
+      deferred = Q.defer();
+      cache._retrieve( deferred, {} );
     });
 
     it('kev', function() {
-      console.log( 'result', result );
-      return expect(result).to.be.rejectedWith( 'no serverConfig passed' );
+      console.log( 'deferred', deferred );
+      return expect(deferred).to.eventually.equal( 'foo' );
     });
 
   });
