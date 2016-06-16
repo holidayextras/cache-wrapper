@@ -59,17 +59,55 @@ describe('cacheWrapper', function() {
   describe('_retrieve', function() {
     var result;
     var deferred;
-    beforeEach(function() {
-      // cache.__set__( 'policies', {
-      //   kev: 'kev'
-      // });
-      deferred = Q.defer();
-      cache._retrieve( deferred, {} );
+    
+    describe( 'when no policy is specified', function() {
+      beforeEach(function() {
+        deferred = Q.defer();
+      });
+      it('should reject the promise', function() {
+        return expect( cache._retrieve( deferred, {} ) ).to.be.rejectedWith( Error, 'policy not found for segment' );
+      });
     });
 
-    it('kev', function() {
-      console.log( 'deferred', deferred );
-      return expect(deferred).to.eventually.equal( 'foo' );
+    describe( 'when a policy is specified', function() {
+      
+      describe( 'when the get() is successful', function() {
+        var getStub;
+        beforeEach(function() {
+          getStub = sandbox.stub().yields( null, 'RESULT' );
+          cache.__set__( 'policies', {
+            test: {
+              get: getStub
+            }
+          });
+          deferred = Q.defer();
+        });
+
+        it( 'should call the stub with the passed key argument', function() {
+          cache._retrieve( deferred, { segment: 'test', key: 'foo' } )
+          return expect( getStub ).to.have.been.calledWith( 'foo' );
+        });
+        it('should resolve the promise with the stubbed cache result', function() {
+          return expect( cache._retrieve( deferred, { segment: 'test' } ) ).to.eventually.deep.equal( 'RESULT' );
+        });
+      });
+
+      describe( 'when the get() fails', function() {
+        var getStub;
+        beforeEach(function() {
+          getStub = sandbox.stub().yields( 'ERROR' );
+          cache.__set__( 'policies', {
+            test: {
+              get: getStub
+            }
+          });
+          deferred = Q.defer();
+        });
+        it('should reject the promise with the stubbed cache result', function() {
+          return expect( cache._retrieve( deferred, { segment: 'test' } ) ).to.be.rejectedWith( Error, 'retrieve failed' );
+        });
+      });
+
     });
 
   });

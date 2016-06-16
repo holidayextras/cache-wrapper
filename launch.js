@@ -5,71 +5,6 @@
 var cacheWrapper = require( './index' );
 
 
-cacheWrapper.initialise( {
-  host: 'localhost',
-  port: '6379',
-  partition: 'cacheWrapper'
-}, [ {
-  segment: 'foo',
-  expiresIn: 10000
-} ] ).then( function() {
-  cacheWrapper.set( {
-    segment: 'foo',
-    key: 'kev:hodges:1',
-    value: 'baz'
-  } ).then( function() {
-
-    cacheWrapper.set( {
-      segment: 'foo',
-      key: 'kev:hodges:2',
-      value: 'also baz'
-    } ).then( function() {
-
-      cacheWrapper.set( {
-        segment: 'foo',
-        key: 'kev:nugget:1',
-        value: 'nuggets'
-      } ).then( function() {
-
-        cacheWrapper.delete( {
-          segment: 'foo',
-          prefix: 'kev:hodges:'
-        } ).then( function() {
-
-          console.log('getting');
-
-          cacheWrapper.get( {
-            segment: 'foo',
-            key: 'kev:hodges:1'
-          } ).then( console.log )
-          .fail( function( error) {
-            console.log('error', error );
-          });
-
-          cacheWrapper.get( {
-            segment: 'foo',
-            key: 'kev:hodges:2'
-          } ).then( console.log )
-          .fail( function( error) {
-            console.log('error2', error );
-          });
-
-
-          cacheWrapper.get( {
-            segment: 'foo',
-            key: 'kev:nugget:1'
-          } ).then( console.log )
-          .fail( function( error) {
-            console.log('error3', error );
-          });
-
-        } );
-      } );
-    } );
-  } ).fail( console.log );
-} ).fail( console.log );
-
-
 // cacheWrapper.initialise( {
 //   host: 'localhost',
 //   port: '6379',
@@ -80,20 +15,85 @@ cacheWrapper.initialise( {
 // } ] ).then( function() {
 //   cacheWrapper.set( {
 //     segment: 'foo',
-//     key: 'bar',
+//     key: 'kev:hodges:1',
 //     value: 'baz'
 //   } ).then( function() {
-//     cacheWrapper.get( {
+
+//     cacheWrapper.set( {
 //       segment: 'foo',
-//       key: 'bar'
-//     } ).then( console.log );
-//     cacheWrapper.get( {
-//       segment: 'foo',
-//       key: 'bar'
-//     } ).then( console.log );
-//     cacheWrapper.get( {
-//       segment: 'foo',
-//       key: 'bar'
-//     } ).then( console.log );
+//       key: 'kev:hodges:2',
+//       value: 'also baz'
+//     } ).then( function() {
+
+//       cacheWrapper.set( {
+//         segment: 'foo',
+//         key: 'kev:nugget:1',
+//         value: 'nuggets'
+//       } ).then( function() {
+
+//         cacheWrapper.delete( {
+//           segment: 'foo',
+//           prefix: 'kev:hodges:'
+//         } ).then( function() {
+
+//           console.log('getting');
+
+//           cacheWrapper.get( {
+//             segment: 'foo',
+//             key: 'kev:hodges:1'
+//           } ).then( console.log )
+//           .fail( function( error) {
+//             console.log('error', error );
+//           });
+
+//           cacheWrapper.get( {
+//             segment: 'foo',
+//             key: 'kev:hodges:2'
+//           } ).then( console.log )
+//           .fail( function( error) {
+//             console.log('error2', error );
+//           });
+
+
+//           cacheWrapper.get( {
+//             segment: 'foo',
+//             key: 'kev:nugget:1'
+//           } ).then( console.log )
+//           .fail( function( error) {
+//             console.log('error3', error );
+//           });
+
+//         } );
+//       } );
+//     } );
 //   } ).fail( console.log );
 // } ).fail( console.log );
+
+
+cacheWrapper.initialise( {
+  host: 'localhost',
+  port: '6379',
+  partition: 'cacheWrapper'
+}, [ {
+  segment: 'foo',
+  expiresIn: 10000
+} ] ).then( function() {
+  cacheWrapper.set( {
+    segment: 'foo',
+    key: 'bar',
+    value: 'baz'
+  } ).then( function() {
+    cacheWrapper.get( {
+      segment: 'foo',
+      key: 'bar'
+    } ).then( console.log );
+    cacheWrapper.get( {
+      segment: 'foo',
+      key: 'bar'
+    } ).then( console.log );
+    cacheWrapper.get( {
+      segment: 'foo',
+      key: 'bar'
+    } ).then( console.log );
+  } ).fail( console.log );
+} ).fail( console.log );
