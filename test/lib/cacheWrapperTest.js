@@ -14,10 +14,16 @@ var cache = rewire( '../../lib/cacheWrapper' );
 
 var Catbox = rewire( 'catbox' );
 
+var getStub;
+var reject = sinon.stub();
+var resolve = sinon.stub();
+
 describe('cacheWrapper', function() {
 
   afterEach(function() {
     sandbox.restore();
+    resolve = sandbox.stub();
+    reject = sandbox.stub();
   });
 
   describe('initialise', function() {
@@ -57,22 +63,23 @@ describe('cacheWrapper', function() {
   });
 
   describe('_retrieve', function() {
-    var result;
-    var deferred;
-    
+
     describe( 'when no policy is specified', function() {
-      beforeEach(function() {
-        deferred = Q.defer();
-      });
       it('should reject the promise', function() {
-        return expect( cache._retrieve( deferred, {} ) ).to.be.rejectedWith( Error, 'policy not found for segment' );
+        cache._retrieve( {
+            reject: reject,
+            resolve: resolve
+          }, {
+            segment: 'test',
+            key: 'foo'
+          });
+        expect( reject ).to.be.calledWith( sinon.match.typeOf('error') );
       });
     });
 
     describe( 'when a policy is specified', function() {
-      
-      describe( 'when the get() is successful', function() {
-        var getStub;
+
+      describe( 'and the cache get is successful', function() {
         beforeEach(function() {
           getStub = sandbox.stub().yields( null, 'RESULT' );
           cache.__set__( 'policies', {
@@ -80,20 +87,24 @@ describe('cacheWrapper', function() {
               get: getStub
             }
           });
-          deferred = Q.defer();
+          cache._retrieve( {
+            reject: reject,
+            resolve: resolve
+          }, {
+            segment: 'test',
+            key: 'foo'
+          });
         });
 
         it( 'should call the stub with the passed key argument', function() {
-          cache._retrieve( deferred, { segment: 'test', key: 'foo' } )
-          return expect( getStub ).to.have.been.calledWith( 'foo' );
+          expect( getStub ).to.be.calledWith( 'foo' );
         });
         it('should resolve the promise with the stubbed cache result', function() {
-          return expect( cache._retrieve( deferred, { segment: 'test' } ) ).to.eventually.deep.equal( 'RESULT' );
+          expect( resolve ).to.be.called();
         });
       });
 
-      describe( 'when the get() fails', function() {
-        var getStub;
+      describe( 'and the cache get fails', function() {
         beforeEach(function() {
           getStub = sandbox.stub().yields( 'ERROR' );
           cache.__set__( 'policies', {
@@ -101,10 +112,90 @@ describe('cacheWrapper', function() {
               get: getStub
             }
           });
-          deferred = Q.defer();
+          cache._retrieve( {
+            reject: reject,
+            resolve: resolve
+          }, {
+            segment: 'test',
+            key: 'foo'
+          });
+        });
+        it('should call the stub with the passed key argument', function() {
+          expect( getStub ).to.be.calledWith( 'foo' );
         });
         it('should reject the promise with the stubbed cache result', function() {
-          return expect( cache._retrieve( deferred, { segment: 'test' } ) ).to.be.rejectedWith( Error, 'retrieve failed' );
+          expect( reject ).to.be.calledWith( sinon.match.typeOf('error') );
+        });
+      });
+
+    });
+
+  });
+
+  describe('_stash', function() {
+
+    describe( 'when no policy is specified', function() {
+      it('should reject the promise', function() {
+        cache.__set__( 'policies', {} );
+        cache._stash({
+          reject: reject
+        }, {} );
+        expect( reject ).to.be.calledWith( sinon.match.typeOf('error') );
+      });
+    });
+
+    describe( 'when a policy is specified', function() {
+
+      describe( 'and the cache set is successful', function() {
+        beforeEach(function() {
+          getStub = sandbox.stub().yields( null, 'RESULT' );
+          cache.__set__( 'policies', {
+            test: {
+              set: getStub
+            }
+          });
+          cache._stash( {
+            reject: reject,
+            resolve: resolve
+          }, {
+            segment: 'test',
+            key: 'foo',
+            value: 'bar'
+          });
+        });
+
+        it( 'should call the stub with the passed key and value arguments', function() {
+          expect( getStub ).to.be.calledWith( 'foo', 'bar' );
+        });
+        it('should resolve the promise with the stubbed cache result', function() {
+          expect( reject.callCount ).to.equal( 0 );
+          expect( resolve ).to.be.called();
+        });
+      });
+
+      describe( 'and the cache set fails', function() {
+        beforeEach(function() {
+          getStub = sandbox.stub().yields( 'ERROR' );
+          cache.__set__( 'policies', {
+            test: {
+              set: getStub
+            }
+          });
+          cache._stash( {
+            reject: reject,
+            resolve: resolve
+          }, {
+            segment: 'test',
+            key: 'foo',
+            value: 'bar'
+          });
+        });
+        it('should call the stub with the passed key and value arguments', function() {
+          expect( getStub ).to.be.calledWith( 'foo', 'bar' );
+        });
+        it('should reject the promise with an error', function() {
+          expect( resolve.callCount ).to.equal( 0 );
+          expect( reject ).to.be.calledWith( sinon.match.typeOf('error') );
         });
       });
 
