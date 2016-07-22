@@ -4,7 +4,11 @@
 // get Elephant and frickin use it!
 var cacheWrapper = require( './index' );
 
-cacheWrapper.initialise( '', [ {
+cacheWrapper.initialise( {
+  host: 'localhost',
+  port: '6379',
+  partition: 'cacheWrapper'
+}, [ {
   segment: 'foo',
   expiresIn: 10000
 } ] ).then( function() {

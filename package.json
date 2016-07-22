@@ -1,7 +1,7 @@
 {
   "name": "cache-wrapper",
   "description": "System aggregator and data logic layer",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "homepage": "https://github.com/holidayextras/cache-wrapper",
   "author": {
     "name": "Shortbreaks",
@@ -18,23 +18,32 @@
     "node": ">= 0.10.0"
   },
   "scripts": {
+    "ci": "istanbul cover _mocha -- test/ -R xunit > $CIRCLE_TEST_REPORTS/unit/results.xml",
+    "test:coverage": "istanbul cover _mocha",
+    "lint": "make-up lib test",
     "start": "node index.js",
-    "test": "node_modules/deployment-helpers/nodeApps/preRelease.sh && node_modules/.bin/make-up lib test && istanbul cover _mocha -- test/**/*Test.js -R spec"
+    "prerelease": "node_modules/deployment-helpers/nodeApps/preRelease.sh",
+    "pretest": "npm run prerelease",
+    "test": "npm run test:coverage",
+    "posttest": "istanbul check-coverage"
   },
   "dependencies": {
     "catbox": "4.2.0",
-    "catbox-memory": "1.1.1",
     "catbox-redis": "1.0.4",
-    "lodash": "3.10.1",
-    "q": "1.4.1"
+    "lodash": "4.13.1",
+    "q": "1.4.1",
+    "redis": "2.6.1"
   },
   "devDependencies": {
-    "chai": "2.2.0",
-    "chai-as-promised": "5.1.0",
+    "chai": ">=3.5.0",
+    "chai-as-promised": ">=5.3.0",
     "deployment-helpers": "git+ssh://git@github.com:holidayextras/deployment-helpers.git",
-    "istanbul": "0.3.7",
-    "make-up": "6.0.0",
-    "mocha": "1.21.3",
-    "sinon": "1.11.1"
+    "dirty-chai": "^1.2.2",
+    "istanbul": ">=0.4.3",
+    "make-up": ">=9.2.0",
+    "mocha": ">=2.5.3",
+    "rewire": "^2.5.1",
+    "sinon": ">=1.17.4",
+    "sinon-chai": ">=2.8.0"
   }
 }
