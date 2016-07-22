@@ -12,7 +12,6 @@ var redisWrapper = require('../../lib/redisWrapper');
 var Q = require('q');
 var rewire = require('rewire');
 var cache = rewire('../../lib/cacheWrapper');
-var catboxRedis = require('catbox-redis');
 var Catbox = rewire('catbox');
 var getStub;
 var redisWrapperStub;
@@ -36,11 +35,11 @@ describe('cacheWrapper', function() {
   describe('initialise', function() {
     var serverConfig = {
       partition: 'test'
-    }
+    };
     var policies = [ {
-      expiresIn:10000,
+      expiresIn: 10000,
       segment: 'test'
-    } ]
+    } ];
     describe('when server config is not passed ', function() {
       it('rejects the promise', function() {
         return expect(cache.initialise()).to.be.rejectedWith('no serverConfig passed');
@@ -67,40 +66,36 @@ describe('cacheWrapper', function() {
           return cache.initialise(serverConfig, policies)
           .then(function() {
             expect(Catbox.Policy).to.be.calledOnce();
-          })
+          });
         });
       });
 
       describe('and redis client is not initialised', function() {
         beforeEach(function() {
           redisWrapperStub = sandbox.stub(redisWrapper, 'initialise', function() {
-             return Q.reject('Failed');
+            return Q.reject('Failed');
           });
         });
         it('should be rejected', function() {
-            return cache.initialise(serverConfig, policies)
+          return cache.initialise(serverConfig, policies)
             .fail(function(result) {
               expect(result).to.equal('redis client was not initialised');
               expect(redisWrapperStub).to.be.calledOnce();
-            })
+            });
         });
       });
-
     });
-
-
   });
 
   describe('_retrieve', function() {
-    var options= {
+    var options = {
       segment: 'test',
       key: 'foo'
-    }
+    };
 
     describe('when no policy is specified', function() {
       it('should reject the promise', function() {
-          cache._retrieve(deferred,options);
-
+        cache._retrieve(deferred, options);
         expect(deferred.reject).to.be.calledWith(sinon.match.typeOf('error'));
       });
     });
@@ -115,7 +110,7 @@ describe('cacheWrapper', function() {
               get: getStub
             }
           });
-          cache._retrieve(deferred,options);
+          cache._retrieve(deferred, options);
         });
 
         it('should call the stub with the passed key argument', function() {
@@ -134,7 +129,7 @@ describe('cacheWrapper', function() {
               get: getStub
             }
           });
-          cache._retrieve(deferred,options);
+          cache._retrieve(deferred, options);
 
         });
         it('should call the stub with the passed key argument', function() {
@@ -159,11 +154,11 @@ describe('cacheWrapper', function() {
     });
 
     describe('when a policy is specified', function() {
-    var stashOptions = {
-      segment: 'test',
-      key: 'foo',
-      value: 'bar'
-    }
+      var stashOptions = {
+        segment: 'test',
+        key: 'foo',
+        value: 'bar'
+      };
       describe('and the cache set is successful', function() {
         beforeEach(function() {
           getStub = sandbox.stub().yields(null, 'RESULT');
@@ -213,7 +208,7 @@ describe('cacheWrapper', function() {
   describe('_delete', function() {
     var deleteOptions = {
       segment: 'test',
-      keys: ['foo','foo1']
+      keys: ['foo', 'foo1']
     };
     describe('when no policy is specified', function() {
       it('should reject the promise', function() {
@@ -223,10 +218,10 @@ describe('cacheWrapper', function() {
     describe('when  policy is specified', function() {
       it('should resolve the promise', function() {
         cache.__set__('policies', {
-            test: {
-              drop: getStub
-            }
-          });
+          test: {
+            drop: getStub
+          }
+        });
 
         return cache._delete(deleteOptions)
         .then(function(result){
@@ -318,7 +313,7 @@ describe('cacheWrapper', function() {
       });
     });
 
-  })
+  });
 
   describe('_addCallToQueue', function() {
     var addToQueueOptions = {
@@ -332,11 +327,11 @@ describe('cacheWrapper', function() {
       segment: 'test',
       key: 'foo',
       value: 'bar'
-    }
+    };
 
     describe('when Client is not initialised', function() {
       beforeEach(function() {
-        cache.__set__('cacheClient','');
+        cache.__set__('cacheClient', '');
 
       });
       it('should reject with an error ', function() {
@@ -355,7 +350,7 @@ describe('cacheWrapper', function() {
           }
         });
         cache._queueRequest = sandbox.stub();
-        cache._addCallToQueue( addToQueueOptions)
+        cache._addCallToQueue(addToQueueOptions);
 
       });
 
@@ -379,7 +374,7 @@ describe('cacheWrapper', function() {
 
 
         cache._addCallToQueue( addToQueueOptions);
-        cache._addCallToQueue(addToQueueOptionsRetrive)
+        cache._addCallToQueue(addToQueueOptionsRetrive);
 
       });
 
@@ -400,7 +395,7 @@ describe('cacheWrapper', function() {
       segment: 'test',
       key: 'foo',
       value: 'bar'
-    }
+    };
     beforeEach(function() {
       cache._addCallToQueue = sandbox.stub();
 
@@ -410,21 +405,21 @@ describe('cacheWrapper', function() {
         value: 'bar'
       });
     });
-      it('should call the _addCallToQueue function', function(){
-        expect(cache._addCallToQueue).to.be.calledOnce();
-        expect(cache._addCallToQueue).to.be.calledWith(expectedOptions)
-      });
+    it('should call the _addCallToQueue function', function(){
+      expect(cache._addCallToQueue).to.be.calledOnce();
+      expect(cache._addCallToQueue).to.be.calledWith(expectedOptions);
+    });
 
 
 
-  })
+  });
   describe('get', function() {
     var expectedOptions = {
       method: 'retrieve',
       segment: 'test',
       key: 'foo',
       value: 'bar'
-    }
+    };
     beforeEach(function() {
       cache._addCallToQueue = sandbox.stub();
 
@@ -436,12 +431,12 @@ describe('cacheWrapper', function() {
 
     });
     it('should call the _addCallToQueue function', function(){
-        expect(cache._addCallToQueue).to.be.calledOnce();
-        expect(cache._addCallToQueue).to.be.calledWith(expectedOptions)
+      expect(cache._addCallToQueue).to.be.calledOnce();
+      expect(cache._addCallToQueue).to.be.calledWith(expectedOptions);
 
-      });
+    });
 
-  })
+  });
   describe('delete', function() {
     beforeEach(function() {
       cache.__set__('partition', 'revolver');
@@ -454,7 +449,7 @@ describe('cacheWrapper', function() {
     });
 
     it('should get the keys using redis scan and call the _delete function', function(){
-       return cache.delete({
+      return cache.delete({
         segment: 'test',
         key: 'foo',
         value: 'bar'
