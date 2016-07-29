@@ -39,9 +39,12 @@
     "chai-as-promised": ">=5.3.0",
     "deployment-helpers": "git+ssh://git@github.com:holidayextras/deployment-helpers.git",
     "dirty-chai": "^1.2.2",
+    "events": ">=1.1.1",
     "istanbul": ">=0.4.3",
     "make-up": ">=9.2.0",
     "mocha": ">=2.5.3",
+    "mock-redis-client": ">=0.91.13",
+    "redis-mock": "^0.10.0",
     "rewire": "^2.5.1",
     "sinon": ">=1.17.4",
     "sinon-chai": ">=2.8.0"

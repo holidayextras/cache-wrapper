@@ -42,7 +42,7 @@ describe('cacheWrapper', function() {
     } ];
     describe('when server config is not passed ', function() {
       it('rejects the promise', function() {
-        return expect(cache.initialise()).to.be.rejectedWith('no serverConfig passed');
+        return expect(cache.initialise()).to.be.rejectedWith('server config missing partition');
       });
     });
     describe('when cache policy is not passed ', function() {

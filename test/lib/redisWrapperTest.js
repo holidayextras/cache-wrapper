@@ -7,11 +7,16 @@ var expect = require('chai')
   .use(require('sinon-chai'))
   .expect;
 var rewire = require('rewire');
+var redisMock = require('redis-mock');
 var redisWrapper = rewire('../../lib/redisWrapper');
+redisWrapper.__set__({
+  redis: redisMock
+});
 var getStub;
 var serverConfig = {
   partition: 'test'
 };
+
 var options = {
   partition: 'test',
   segment: 'test:test',
@@ -37,7 +42,7 @@ describe('redisWrapper', function() {
         return expect(result).to.be.rejectedWith('no serverConfig passed');
       });
     });
-    describe('when server config is passed ', function() {
+    describe('when server config is passed and redis client is available ', function() {
       beforeEach(function() {
         result = redisWrapper.initialise(serverConfig);
       });
@@ -45,6 +50,7 @@ describe('redisWrapper', function() {
         return expect(result).to.be.fulfilled();
       });
     });
+
   });
 
   describe('scan', function() {
