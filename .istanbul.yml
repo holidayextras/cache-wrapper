@@ -1,9 +1,8 @@
 instrumentation:
   include-all-sources: true
-  excludes: ['launch.js']
 check:
   global:
     statements: 96
     lines: 96
     branches: 89
-    functions: 100
+    functions: 96
