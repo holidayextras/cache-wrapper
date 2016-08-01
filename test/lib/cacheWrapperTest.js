@@ -17,11 +17,7 @@ var getStub;
 var redisWrapperStub;
 var reject = sinon.stub();
 var resolve = sinon.stub();
-
-var deferred = {
-  reject: reject,
-  resolve: resolve
-};
+var deferred = {};
 
 describe('cacheWrapper', function() {
 
@@ -36,13 +32,18 @@ describe('cacheWrapper', function() {
     var serverConfig = {
       partition: 'test'
     };
-    var policies = [ {
-      expiresIn: 10000,
-      segment: 'test'
-    } ];
+    var policies = [
+      {
+        expiresIn: 10000,
+        segment: 'test'
+      },
+      {
+        segment: 'testSegment'
+      }
+    ];
     describe('when server config is not passed ', function() {
       it('rejects the promise', function() {
-        return expect(cache.initialise()).to.be.rejectedWith('server config missing partition');
+        return expect(cache.initialise()).to.be.rejectedWith('Missing serverConfig/serverConfig.partition');
       });
     });
     describe('when cache policy is not passed ', function() {
@@ -438,28 +439,53 @@ describe('cacheWrapper', function() {
 
   });
   describe('delete', function() {
-    beforeEach(function() {
-      cache.__set__('partition', 'revolver');
-      cache._delete = sandbox.stub();
-      redisWrapperStub = sandbox.stub(redisWrapper, 'scan', function() {
-        return Q.resolve();
-      });
+    describe('when redis SCAN is successful', function() {
+      beforeEach(function() {
+        cache.__set__('partition', 'revolver');
+        cache._delete = sandbox.stub();
+        redisWrapperStub = sandbox.stub(redisWrapper, 'scan', function() {
+          return Q.resolve();
+        });
 
-
-    });
-
-    it('should get the keys using redis scan and call the _delete function', function(){
-      return cache.delete({
-        segment: 'test',
-        key: 'foo',
-        value: 'bar'
-      }).then(function(){
-        expect(redisWrapperStub).to.be.calledOnce();
-        expect(cache._delete).to.be.calledOnce();
 
       });
 
-    });
+      it('should get the keys using redis scan and call the _delete function', function(){
+        return cache.delete({
+          segment: 'test',
+          key: 'foo',
+          value: 'bar'
+        }).then(function(){
+          expect(redisWrapperStub).to.be.calledOnce();
+          expect(cache._delete).to.be.calledOnce();
 
+        });
+
+      });
+    });
+    describe('when redis SCAN errors', function() {
+      beforeEach(function() {
+        cache.__set__('partition', 'revolver');
+        cache._delete = sandbox.stub();
+        redisWrapperStub = sandbox.stub(redisWrapper, 'scan', function() {
+          return Q.reject();
+        });
+
+
+      });
+
+      it('cache drop will be unsuccessful', function(){
+        return cache.delete({
+          segment: 'test',
+          key: 'foo',
+          value: 'bar'
+        }).then(function(){
+          expect(redisWrapperStub).to.be.calledOnce();
+          expect(cache._delete).to.not.have.been.called();
+
+        });
+
+      });
+    });
   });
 });
