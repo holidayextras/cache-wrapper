@@ -173,7 +173,7 @@ describe('cacheWrapper', function() {
           expect(getStub).to.be.calledWith('foo', 'bar');
         });
         it('should resolve the promise with the stubbed cache result', function() {
-          expect(deferred.reject.callCount).to.equal(0);
+          expect(deferred.reject).to.not.have.been.called();
           expect(deferred.resolve).to.be.called();
         });
       });
