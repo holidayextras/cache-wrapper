@@ -194,7 +194,7 @@ describe('cacheWrapper', function() {
         });
         it('should reject the promise with an error', function() {
 
-          expect(deferred.resolve.callCount).to.equal(0);
+          expect(deferred.resolve).to.not.have.been.called();
           expect(deferred.reject).to.be.calledWith(sinon.match.typeOf('error'));
         });
       });
