@@ -15,8 +15,6 @@ var cache = rewire('../../lib/cacheWrapper');
 var Catbox = rewire('catbox');
 var getStub;
 var redisWrapperStub;
-var reject = sinon.stub();
-var resolve = sinon.stub();
 var deferred = {};
 
 describe('cacheWrapper', function() {
