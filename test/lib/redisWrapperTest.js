@@ -93,7 +93,7 @@ describe('redisWrapper', function() {
 
     describe('when required options is passed and redisClient does not error', function() {
       beforeEach(function() {
-        recursiveScanStub = sandbox.stub(redisWrapper, 'recursiveScan', function(scanOptions) {
+        recursiveScanStub = sandbox.stub(redisWrapper, '_recursiveScan', function(scanOptions) {
           scanOptions.keys = ['key1', 'key2'];
           return Q.resolve(scanOptions);
         });
@@ -117,7 +117,7 @@ describe('redisWrapper', function() {
             scan: getStub
           }
         });
-        redisWrapper.recursiveScan(recursiveScanOptions, 'testPrefix', 'cacheNamespace', deferred);
+        redisWrapper._recursiveScan(recursiveScanOptions, 'testPrefix', 'cacheNamespace', deferred);
       });
       it('returns with the keys that match the prefix', function() {
         expect(getStub).to.be.calledOnce();
@@ -136,8 +136,7 @@ describe('redisWrapper', function() {
             scan: getStub
           }
         });
-        redisWrapper.recursiveScan(recursiveScanOptions, 'testPrefix', 'cacheNamespace', deferred);
-
+        redisWrapper._recursiveScan(recursiveScanOptions, 'testPrefix', 'cacheNamespace', deferred);
       });
       it('returns with the keys that match the prefix', function() {
         expect(getStub).to.be.calledTwice();
