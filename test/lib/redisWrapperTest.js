@@ -1,6 +1,7 @@
 'use strict';
 var sinon = require('sinon');
 var sandbox = sinon.sandbox.create();
+var Q = require('q');
 var expect = require('chai')
   .use(require('dirty-chai'))
   .use(require('chai-as-promised'))
@@ -13,24 +14,49 @@ redisWrapper.__set__({
   redis: redisMock
 });
 var getStub;
+var recursiveScanStub;
 var serverConfig = {
   partition: 'test'
 };
+var deferred = {};
+
 
 var options = {
   partition: 'test',
   segment: 'test:test',
   prefix: 'testPrefix'
 };
+var recursiveScanOptions = {
+  partition: 'test',
+  segment: 'test:test',
+  prefix: 'testPrefix',
+  newCursor: 0,
+  keys: []
+};
+var recursiveScanExpectedOptions = {
+  partition: 'test',
+  segment: 'test:test',
+  prefix: 'testPrefix',
+  newCursor: 0,
+  keys: [
+    'test:test:test:key1',
+    'test:test:test:key2',
+    'test:test:test:key3',
+    'test:test:test:key4'
+  ]
+};
 var expectedOptions = {
   partition: 'test',
   segment: 'test:test',
   prefix: 'testPrefix',
+  newCursor: 0,
   keys: ['key1', 'key2']
 };
 var result;
 describe('redisWrapper', function() {
   afterEach(function() {
+    deferred.resolve = sandbox.stub();
+    deferred.reject = sandbox.stub();
     sandbox.restore();
   });
   describe('initialise', function() {
@@ -67,22 +93,22 @@ describe('redisWrapper', function() {
 
     describe('when required options is passed and redisClient does not error', function() {
       beforeEach(function() {
-        getStub = sandbox.stub().yieldsTo(null, null, [['testing'], ['test:test%3Atest:key1', 'test:test%3Atest:key2'] ]);
-        redisWrapper.__set__({
-          redisClient: {
-            scan: getStub
-          }
+        recursiveScanStub = sandbox.stub(redisWrapper, 'recursiveScan', function(scanOptions) {
+          scanOptions.keys = ['key1', 'key2'];
+          return Q.resolve(scanOptions);
         });
+
       });
       it('returns with the keys that match the prefix', function() {
         return redisWrapper.scan(options)
           .then(function(resultOptions) {
-            expect(getStub).to.be.calledOnce();
+            expect(recursiveScanStub).to.be.calledOnce();
             expect(resultOptions).to.deep.equal(expectedOptions);
           });
       });
     });
-
+  });
+  describe('recursiveScan', function() {
     describe('when required options is passed and redisClient errors', function() {
       beforeEach(function() {
         getStub = sandbox.stub().yieldsTo(null, 'error');
@@ -91,12 +117,33 @@ describe('redisWrapper', function() {
             scan: getStub
           }
         });
+        redisWrapper.recursiveScan(recursiveScanOptions, 'testPrefix', 'cacheNamespace', deferred);
       });
       it('returns with the keys that match the prefix', function() {
-        return redisWrapper.scan(options)
-          .fail(function() {
-            expect(getStub).to.be.calledOnce();
-          });
+        expect(getStub).to.be.calledOnce();
+        expect(deferred.reject).to.be.calledWith('Redis SCAN failed');
+      });
+    });
+
+    describe('when required options is passed and redisClient does not error', function() {
+      beforeEach(function() {
+        getStub = sandbox.stub();
+        getStub.onFirstCall().yieldsTo(null, null, [5, ['test:test%3Atest:key1', 'test:test%3Atest:key2'] ]);
+        getStub.onSecondCall().yieldsTo(null, null, [0, ['test:test%3Atest:key3', 'test:test%3Atest:key4'] ]);
+
+        redisWrapper.__set__({
+          redisClient: {
+            scan: getStub
+          }
+        });
+        redisWrapper.recursiveScan(recursiveScanOptions, 'testPrefix', 'cacheNamespace', deferred);
+
+      });
+      it('returns with the keys that match the prefix', function() {
+        expect(getStub).to.be.calledTwice();
+        expect(deferred.resolve).to.be.calledOnce();
+        expect(deferred.resolve).to.be.calledWith(recursiveScanExpectedOptions);
+
       });
     });
   });
