@@ -1,7 +1,7 @@
 {
   "name": "cache-wrapper",
   "description": "System aggregator and data logic layer",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "homepage": "https://github.com/holidayextras/cache-wrapper",
   "author": {
     "name": "Shortbreaks",
@@ -15,7 +15,7 @@
   "license": "MIT",
   "main": "lib/cacheWrapper",
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">=6.10.3"
   },
   "scripts": {
     "ci": "istanbul cover _mocha -- test/ -R xunit > $CIRCLE_TEST_REPORTS/unit/results.xml",
@@ -28,24 +28,24 @@
     "posttest": "istanbul check-coverage"
   },
   "dependencies": {
-    "catbox": "4.2.0",
-    "catbox-redis": "1.0.4",
-    "lodash": "4.13.1",
-    "q": "1.4.1",
-    "redis": "2.6.1"
+    "catbox": "7.1.5",
+    "catbox-redis": "3.0.2",
+    "lodash": "4.17.4",
+    "q": "1.5.0",
+    "redis": "2.7.1"
   },
   "devDependencies": {
-    "chai": ">=3.5.0",
-    "chai-as-promised": ">=5.3.0",
+    "chai": ">=4.1.0",
+    "chai-as-promised": ">=7.1.1",
     "deployment-helpers": "git+ssh://git@github.com:holidayextras/deployment-helpers.git",
-    "dirty-chai": ">=1.2.2",
-    "istanbul": ">=0.4.3",
-    "make-up": ">=9.2.0",
-    "mocha": ">=2.5.3",
+    "dirty-chai": ">=2.0.1",
+    "istanbul": ">=0.4.5",
+    "make-up": ">=10.0.0",
+    "mocha": ">=3.5.0",
     "mock-redis-client": ">=0.91.13",
-    "redis-mock": ">=0.10.0",
-    "rewire": ">=2.5.1",
-    "sinon": ">=1.17.4",
-    "sinon-chai": ">=2.8.0"
+    "redis-mock": ">=0.20.0",
+    "rewire": ">=2.5.2",
+    "sinon": ">=2.4.1",
+    "sinon-chai": ">=2.12.0"
   }
 }
