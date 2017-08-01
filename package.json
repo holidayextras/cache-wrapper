@@ -20,7 +20,7 @@
   "scripts": {
     "ci": "istanbul cover _mocha -- test/ -R xunit > $CIRCLE_TEST_REPORTS/unit/results.xml",
     "test:coverage": "istanbul cover _mocha",
-    "lint": "make-up lib test",
+    "lint": "standard",
     "start": "node index.js",
     "prerelease": "node_modules/deployment-helpers/nodeApps/preRelease.sh",
     "pretest": "npm run prerelease",
@@ -32,7 +32,8 @@
     "catbox-redis": "3.0.2",
     "lodash": "4.17.4",
     "q": "1.5.0",
-    "redis": "2.7.1"
+    "redis": "2.7.1",
+    "standard": "^10.0.2"
   },
   "devDependencies": {
     "chai": ">=4.1.0",
@@ -47,5 +48,10 @@
     "rewire": ">=2.5.2",
     "sinon": ">=2.4.1",
     "sinon-chai": ">=2.12.0"
+  },
+  "standard": {
+    "env": {
+      "mocha": true
+    }
   }
 }
