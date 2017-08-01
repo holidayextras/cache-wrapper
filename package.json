@@ -24,7 +24,7 @@
     "start": "node index.js",
     "prerelease": "node_modules/deployment-helpers/nodeApps/preRelease.sh",
     "pretest": "npm run prerelease",
-    "test": "npm run test:coverage",
+    "test": "npm run lint && npm run test:coverage",
     "posttest": "istanbul check-coverage"
   },
   "dependencies": {
