@@ -12,7 +12,7 @@ var redisWrapper = require('../../lib/redisWrapper')
 var Q = require('q')
 var rewire = require('rewire')
 var cache = rewire('../../lib/cacheWrapper')
-var Catbox = rewire('catbox')
+var Catbox = require('catbox')
 var getStub
 var redisWrapperStub
 var deferred = {}
@@ -51,10 +51,7 @@ describe('cacheWrapper', function () {
 
     describe('when serverconfig and cachePolicies are passed in ', function () {
       beforeEach(function () {
-        Catbox.__set__({
-          Policy: function () {}
-        })
-        Catbox.Policy = sandbox.spy()
+        sandbox.spy(Catbox, 'Policy')
       })
 
       describe(' and redis client is initialised', function () {
