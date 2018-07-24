@@ -25,7 +25,8 @@
     "prerelease": "node_modules/deployment-helpers/nodeApps/preRelease.sh",
     "pretest": "npm run prerelease",
     "test": "npm run lint && npm run test:coverage",
-    "posttest": "istanbul check-coverage"
+    "posttest": "istanbul check-coverage",
+    "deploy": "exit 0"
   },
   "dependencies": {
     "catbox": "7.1.5",
@@ -52,5 +53,8 @@
     "env": {
       "mocha": true
     }
-  }
+  },
+  "owner": "sb-backoffice",
+  "platform": "custom",
+  "ci": "dockyard"
 }
