@@ -1,7 +1,5 @@
 # cache-wrapper
 
-[![Circle CI](https://circleci.com/gh/holidayextras/cache-wrapper/tree/master.svg?style=svg&circle-token=c8841a78d88271f74d5bda3a0c307056662d29ad)](https://circleci.com/gh/holidayextras/cache-wrapper/tree/master)
-
 ## About
 
 A simple wrapper for catbox cache, that uses redis if `serverConfig` is not empty and memory when `serverConfig` is an empty object. This also offers queueing for requests if the connection to the cache server has dropped.
