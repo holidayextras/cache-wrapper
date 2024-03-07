@@ -54,7 +54,7 @@
       "mocha": true
     }
   },
-  "owner": "sb-backoffice",
+  "owner": "buying",
   "platform": "custom",
   "ci": "dockyard"
 }
