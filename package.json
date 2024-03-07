@@ -54,7 +54,7 @@
       "mocha": true
     }
   },
-  "owner": "buying",
+  "owner": "audience",
   "platform": "custom",
   "ci": "dockyard"
 }
