@@ -31,9 +31,9 @@
   "dependencies": {
     "catbox": "7.1.5",
     "catbox-redis": "3.0.2",
-    "lodash": "4.17.4",
+    "lodash": "4.17.21",
     "q": "1.5.0",
-    "redis": "2.7.1"
+    "redis": "3.1.1"
   },
   "devDependencies": {
     "chai": "^4.1.0",
